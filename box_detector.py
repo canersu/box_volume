@@ -25,8 +25,6 @@ edged = cv2.erode(edged, None, iterations=1)
 cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
                         cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
-# cv2.imshow('abc', edged)
-# cv2.waitKey(0)
 # sort the contours from left-to-right and initialize the
 # 'pixels per metric' calibration variable
 (cnts, _) = contours.sort_contours(cnts)
