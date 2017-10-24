@@ -5,13 +5,14 @@ from imutils import perspective
 from imutils import contours
 import numpy as np
 from scipy.spatial import distance as dist
+from time import sleep
 
 
 def midpoint(ptA, ptB):
     return (ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5
 
 
-image = cv2.imread('/home/can/pycharm/box_volume/images/img2.jpg')
+image = cv2.imread('/home/can/pycharm/box_volume/images/img3.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
@@ -33,13 +34,13 @@ pixelsPerMetric = 8.50
 # loop over the contours individually
 for c in cnts:
     # if the contour is not sufficiently large, ignore it
-    if cv2.contourArea(c) < 10:
+    if cv2.contourArea(c) < 50:  # original is 100
         continue
 
     # compute the rotated bounding box of the contour
     orig = image.copy()
     box = cv2.minAreaRect(c)
-    box = cv2.cv.BoxPoints(box) if imutils.is_cv2() else cv2.boxPoints(box)
+    box = cv2.boxPoints(box)
     box = np.array(box, dtype="int")
 
     # order the points in the contour such that they appear
@@ -59,19 +60,19 @@ for c in cnts:
     (tl, tr, br, bl) = box
     (tltrX, tltrY) = midpoint(tl, tr)
     (blbrX, blbrY) = midpoint(bl, br)
-
-    # compute the midpoint between the top-left and top-right points,
-    # followed by the midpoint between the top-righ and bottom-right
+    #
+    # # compute the midpoint between the top-left and top-right points,
+    # # followed by the midpoint between the top-righ and bottom-right
     (tlblX, tlblY) = midpoint(tl, bl)
     (trbrX, trbrY) = midpoint(tr, br)
-
+    #
     # draw the midpoints on the image
     cv2.circle(orig, (int(tltrX), int(tltrY)), 5, (255, 0, 0), -1)
     cv2.circle(orig, (int(blbrX), int(blbrY)), 5, (255, 0, 0), -1)
     cv2.circle(orig, (int(tlblX), int(tlblY)), 5, (255, 0, 0), -1)
     cv2.circle(orig, (int(trbrX), int(trbrY)), 5, (255, 0, 0), -1)
-
-    # draw lines between the midpoints
+    #
+    # # draw lines between the midpoints
     cv2.line(orig, (int(tltrX), int(tltrY)), (int(blbrX), int(blbrY)),
              (255, 0, 255), 2)
     cv2.line(orig, (int(tlblX), int(tlblY)), (int(trbrX), int(trbrY)),
@@ -101,5 +102,7 @@ for c in cnts:
     print(dimA)
     print(dimB)
     # show the output image
-    cv2.imshow("Image", orig)
-    cv2.waitKey(0)
+    #cv2.imshow("Image", orig)
+    #cv2.waitKey(0)
+    #sleep(2)
+print("Finished")
